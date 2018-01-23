@@ -1,4 +1,4 @@
-# MARsym_snpcalling
+# SNPcalling: SNPcalling.GATKv330.sh
 
 # Purpose of script:
 Shows detailed commands that were used for SNP calling in the MARsym paper.
