@@ -5,7 +5,7 @@ Shows detailed commands that were used for read mapping in the MARsym paper.
 Reads of quality q20 were mapped to a consensus reference sequence with minimum nucleotide identity of 0.95 using BBMap.
 
 ## [01] Programs that need to be installed to execute script:
-- BBmap v36.x sourceforge.net/projects/bbmap/ (for later versions command details might need to be adatpted)
+- BBmap v36.x https://sourceforge.net/projects/bbmap/ (for later versions command details might need to be adatpted)
 - samtools https://github.com/samtools/samtools
 
 ## [01] Required input files:
