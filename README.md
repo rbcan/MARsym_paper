@@ -1,19 +1,19 @@
-## 01. Mapping: mapping.bbmapv36x.sh 
+# 01. Mapping: mapping.bbmapv36x.sh 
 
-# Purpose of script:
+## [01] Purpose of script:
 Shows detailed commands that were used for read mapping in the MARsym paper.
 Reads of quality q20 were mapped to a consensus reference sequence with minimum nucleotide identity of 0.95 using BBMap.
 
-# Programs that need to be installed to execute script:
+## [01] Programs that need to be installed to execute script:
 - BBmap v36.x sourceforge.net/projects/bbmap/ (for later versions command details might need to be adatpted)
 - samtools https://github.com/samtools/samtools
 
-# Required input files:
+## [01] Required input files:
 - Illumina reads in gzipped fastq format for each sample s1, s2, s3, ... sn (e.g. s1.fq.gz)
 - Reference sequence in fasta format: ref.fasta
 info: the script uses a consensus reference for all samples. If you have one reference per sample, you need to replace all $ref in the code with $sample
 
-# Example of output files for sample s1
+## [01] Example of output files for sample s1
 - mapping.$DATE.log - *logfile for mapping (all samples s1, s2, s3, ... sn)*
 - coverage_depth_bam.txt - *coverage depths of the mapping file of each sample (s1, s2, s3, ... sn)*
 - coverage_depth_rmdup.txt - *coverage depths of the mapping file of each sample (s1, s2, s3, ... sn) after PCR duplicate removal*
@@ -23,22 +23,22 @@ info: the script uses a consensus reference for all samples. If you have one ref
 
 # 02. SNPcalling: SNPcalling.GATKv330.github.sh
 
-# Purpose of script:
+## [02] Purpose of script:
 Shows detailed commands that were used for SNP calling in the MARsym paper.
 Script calls SNPs on mapped reads to a reference with GATK and a ploidy setting of 10. Input files can be created with MARsym_mapping.
 
-# Programs that need to be installed to execute script:
+## [02] Programs that need to be installed to execute script:
 - GenomeAnalysisToolKit (GATK) v3.3.0 https://software.broadinstitute.org/gatk/download/ (for later versions command details might need to be adatpted)
 - picard-tools v1.119 https://github.com/broadinstitute/picard (for later versions command details might need to be adatpted)
 - samtools https://github.com/samtools/samtools
 - ucsc tools (executable faCount) https://github.com/adamlabadorf/ucsc_tools
 
-# Required input files:
+## [02] Required input files:
 - Reference sequence in fasta format: ref.fasta
 info: the script uses a consensus reference for all samples. If you have one reference per sample, you need to replace all $ref in the code with $sample
 - indexed bamfile of reads mapping to <ref>.fasta where PCR duplicates were removed in sorted and indexed bam format: s1.id95.rmdup.bam s2.id95.rmdup.bam s3.id95.rmdup.bam ... sn.id95.rmdup.bam, where s1, s2, s3, sn are the individual $samples. Input bam-files can be created with MARsym_mapping
 
-# Example of output files for sample s1 with target read coverage of 100x
+## [02] Example of output files for sample s1 with target read coverage of 100x
 - ref.dict - *reference dictionary (for all samples s1, s2, s3, ... sn)*
 - SNPcounts.txt - *final SNP counts: absolute and per kbp (for all samples s1, s2, s3, ... sn)*
 - SNPcalling.$DATE.log - *logfile (for all samples s1, s2, s3, ... sn)*
