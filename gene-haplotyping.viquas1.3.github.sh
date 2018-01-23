@@ -1,31 +1,34 @@
 #!/bin/bash
 
-source ~/.bashrc
 
-DATE=`date +%d%m%Y`
-logfile=$JOB_ID.haplotyping.$DATE.log
-exec > $logfile 2>&1
 
-# specify all of the following "variables"
-ref="" # reference assembly: *.fa
-gene="" # region for gene to be extracted from reference e.g. NODE_1:6932-7552
-bam="" # sample name in *.bam
-length="" # gene length in number of nucleotides, e.g. 1500
+mkdir ./fasta.files/
+mkdir ./bam.files/
 
-mkdir ViQuaS
-cd ViQuaS # copy reference assembly to working directory
-mkdir fasta
-mkdir bam
+# sample.viquasIn: Contig <tab> geneStart <tab> geneEnd; e.g. Node_15  500 1500
+gene_pos=$(awk -F "\t" '{print $2":"$3"-"$4}' s1.viquasIn | tr '\n' '\t')
 
-samtools faidx ./$ref.fa $gene > ./fasta/$gene.fa
-samtools view -b ./bam/$bam.bam $gene > ./bam/$gene.bam
-samtools index ./bam/$gene.bam
+for gene in $gene_pos
+do
+samtools faidx $ref.fasta $gene > ./fasta.files/$ref.$gene.fa
+samtools view -b ./100x.s1.map.real.bam $gene > ./bam.files/s1.$gene.bam
+samtools index ./bam.files/s1.$gene.bam
+samtools view -h -F 4 -b ./bam.files/s1.$gene.bam > ./bam.files/s1.$gene.onlymapped.bam
+samtools index ./bam.files/s1.$gene.onlymapped.bam
+rm ./bam.files/s1.$gene.bam
+done
 
-samtools view -h -F 4 -b ./bam/$gene.bam > ./bam/$gene.onlymapped.bam
-
-timeout 5m Rscript /home/ansorge/programs/ViQuaS1.3/ViQuaS.R ./fasta/$gene.fa ./bam/$gene.onlymapped.bam 5 0.7 1 $length
-mv ViQuaS-Richness.txt Richness.$gene
-mv ViQuaS-Spectrum.fa Spectrum.$gene
+for gene in $gene_pos
+do
+calc=$(echo $gene | sed 's/.*://g')
+a=$(echo $((-1*($calc))))
+timeout 5m Rscript ./ViQuaS.R ./fasta.files/$ref.$gene.fa ./bam.files/s1.$gene.onlymapped.bam 5 0.7 1 $a
+mv ViQuaS-Richness.txt Richness.s1.$genetxt
+mv ViQuaS-Spectrum.fa Spectrum.s1.$gene.fa
 rm -r SIM
 rm -r Samples
 rm -r viquas
+done
+
+
+
