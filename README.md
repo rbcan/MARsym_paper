@@ -21,7 +21,7 @@ info: the script uses a consensus reference for all samples. If you have one ref
 - s1.rmdup.bam - *sorted and indexed mapping file after PCR duplicate removal*
 
 
-# 02. SNPcalling: SNPcalling.GATKv330.github.sh
+# 02. SNPcalling: SNPcalling.gatkv3.3.0.sh
 
 ## [02] Purpose of script:
 Shows detailed commands that were used for SNP calling in the MARsym paper.
@@ -52,4 +52,5 @@ info: the script uses a consensus reference for all samples. If you have one ref
 - 100x.s1.filtSNPs_PASS_ploidy10.vcf - *file with only those SNPs that passed the all filters* 
 - 100x.s1.filtINDELs_PASS_ploidy10.vcf - *file with only those INDELs that passed the all filters* 
 
+# 03. Strain number estimation: geneHaplotyping.viquas1.3.sh
 
