@@ -225,6 +225,8 @@ for sample in $SAMPLES
         filtINDploidy10=$(grep -v "^#" ./$down\x.$sample.filtINDELs_PASS_ploidy10.vcf -c | awk '{print $0"\t"$1/"'$genomelength'"*1000}')
 	echo -e "filtINDELs_pl10\t"$sample"\t"$filtINDploidy10 >> SNPcounts.txt
 
+	rm $sample.RG.bam
+
 done
 
 head -50 SNPcounts.txt
