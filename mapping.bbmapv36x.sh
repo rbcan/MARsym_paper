@@ -2,61 +2,48 @@
 
 #log into 15 threads with qrsh or try qsub
 
-echo "Please enter your input REF reference name (of which you have REF.fasta), include PATH if not in your working directory: "
-read REF
-echo "your sample read files should be named like this: SAMPLE_NAME.f.fq.gz (forward) and SAMPLE_NAME.r.fq.gz (reverse)"
-echo "Please enter your input SAMPLE name (s) (e.g. "BazF BazG BazH"): "
-read SAMPLES
-
-echo =================================================================
-echo "Script started $(date)"
 DATE=`date +%d%m%Y`
-echo "Your logfile is "$REF".mapping.$DATE.log" 
-echo =================================================================
-
-
-logfile=$REF.mapping.$DATE.log
+logfile=mapping."$DATE".log
 exec > $logfile 2>&1
 
 echo =================================================================
 echo "Script started $(date)"
 DATE=`date +%d%m%Y`
-echo "Your logfile is "$REF".mapping.$DATE.log" 
+echo "Your logfile is mapping."$DATE".log" 
 echo =================================================================
 
+ref="<ref>" # Replace <ref> with reference name for which you have <ref>.fasta
+### info: this script uses a consensus reference for all samples. If you have one reference per sample, you need to replave all $ref in the code below with $sample 
+SAMPLES="<s1> <s2> <s3> ... <sn>" # Replace <s1> <s2> <s3> ... <sn> with your sample IDs separated by a space each. You have to provide sn.f.fq.gz and sn.r.fq.gz for each of your samples n.
+out="mapping" # Specify name variable for outputfolder
+
 echo " "
-echo "your reference is "$REF
+echo "your reference is "$ref
+echo " "
+for sample in $SAMPLES
+do
+echo " "
 echo "your read inputs are: "$sample".f.fq.gz, "$sample".r.fq.gz"
 echo " "
-
-### Adapt your the files according to your files:
-### replace READs_f and READS_r with your clean forward and reverse reads (I have reads with quality 20 usually)
+done
 
 ############ Create coverage depth files
 echo "coverage depth for *.q20.bam:" > coverage_depth_bam.txt
 echo "coverage depth for *.q20.bam:" > coverage_depth_rmdup.txt
 
-############ Modify read headers
-#echo "modify read headers"
-#sed 's/ 1:N:0:[0-9]*/\/1/g' input.reads.R1.fastq > output.reads.R1.fastq
-#sed 's/ 2:N:0:[0-9]*/\/2/g' input.reads.R2.fastq > output.reads.R2.fastq
-
-############ Quality 20
+############ If needed, set read quality to q20. Not always advisable - depends on sample type.
 echo "$(date)"
-echo "set read quality 20"
+echo "set read quality to 20"
 
 for sample in $SAMPLES
 do
-bbduk.sh threads=10 in1=$sample.f.fq.gz in2=$sample.r.fq.gz out=$sample.q20.fq.gz qtrim=rl trimq=20
-#bbduk.sh -Xmx8g ref=/home/rebecca/work/tools/bbmap/resources/phix174_ill.ref.fa.gz,/home/rebecca/work/tools/bbmap/resources/truseq.fa.gz in1=$sample.f.fq.gz in2=$sample.r.fq.gz out=$sample.q20.fq.gz qtrim=rl trimq=20
-#reformat.sh -Xmx8g in=$sample.q20.fq.gz out1=$sample.fq.gz ftl=10
+/PATH/bbduk.sh threads=15 in1=$sample.f.fq.gz in2=$sample.r.fq.gz out=$sample.q20.fq.gz qtrim=rl trimq=20
 done
 
-  
-############ mapping with bbmap
+############ mapping with bbmap - adjust read name if not using q20 reads
 echo ====================================================================================================
 echo "$(date)"
-echo "mapping with bbmap in progress"
+echo "start mapping with bbmap"
 echo " " 
 
 for sample in $SAMPLES
@@ -64,7 +51,7 @@ for sample in $SAMPLES
     echo "*****************************************************************"
     echo "mapping and sorting $sample"
     echo "*****************************************************************"
-    bbmap.sh threads=15 ref=$REF.fa in=$sample.q20.fq.gz out=$sample.q20.bam
+    /PATH/bbmap.sh threads=15 ref=$ref.fa in=$sample.q20.fq.gz out=$sample.q20.bam
     samtools sort $sample.q20.bam $sample.q20S
     mv $sample.q20S.bam $sample.q20.bam
     ########## index *.bam file
@@ -89,6 +76,6 @@ echo mapping finished!
 echo =================================================================
 echo "Script finished $(date)"
 DATE=`date +%d%m%Y`
-echo "Your logfile is "$REF".mapping.$DATE.log" 
+echo "Your logfile is mapping."$DATE".log" 
 echo =================================================================
 
