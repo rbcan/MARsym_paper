@@ -1,8 +1,25 @@
-# SNPcalling: SNPcalling.GATKv330.sh
+# 01. Mapping: mapping.bbmapv36x.sh
+
+# Purpose of script:
+Shows detailed commands that were used for read mapping in the MARsym paper.
+Reads of quality q20 were mapped to a consensus reference sequence with minimum nucleotide identity of 0.95 using BBMap.
+
+# Programs that need to be installed to execute script:
+- BBmap v36.x sourceforge.net/projects/bbmap/ (for later versions command details might need to be adatpted)
+
+# Required input files:
+- Illumina reads in gzipped fastq format for each sample s1, s2, s3, ... sn (e.g. s1.fq.gz)
+- Reference sequence in fasta format: ref.fasta
+info: the script uses a consensus reference for all samples. If you have one reference per sample, you need to replave all $ref in the code with $sample
+
+# Example of output files for sample s1
+
+
+# 02. SNPcalling: SNPcalling.GATKv330.github.sh
 
 # Purpose of script:
 Shows detailed commands that were used for SNP calling in the MARsym paper.
-Script calls SNPs on mapped reads to a reference with a ploidy setting of 10. Input files can be created with MARsym_mapping.
+Script calls SNPs on mapped reads to a reference with GATK and a ploidy setting of 10. Input files can be created with MARsym_mapping.
 
 # Programs that need to be installed to execute script:
 - GenomeAnalysisToolKit (GATK) v3.3.0 https://software.broadinstitute.org/gatk/download/ (for later versions command details might need to be adatpted)
