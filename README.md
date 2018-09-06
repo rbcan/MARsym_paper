@@ -82,4 +82,10 @@ Shows detailed commands that were used for identification of genes with coverage
 - R https://www.r-project.org/
 - PhylaAmphora https://github.com/martinwu/Phyla_AMPHORA
 
-
+## [04] Required input files:
+- Reference sequence in fasta format: ref.fasta
+- Annotations of reference in gff3 format: ref.gff
+- Predicted amino acid sequences of proteins: ref.faa
+- s1.real.bam - bamfiles with readgroups and realigned reads around INDELs
+  OR (depends on sample/question)
+- 100x.s1.bam - downsampled bam file (with readgroups and realigned reads around INDELs) with target read coverage 100x
