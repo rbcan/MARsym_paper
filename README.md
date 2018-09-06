@@ -98,3 +98,8 @@ Shows detailed commands that were used for identification of genes with coverage
 - LowCovGenes_$sample - *list with low-coverage genes*
 - LowCovGenes_noHypo_$sample - *list with low-coverage genes, excluding hypothetical proteins*
 - $ref.plots.pdf - * plots with coverage distribution of genes*
+
+--
+
+If you find these workflows useful and use some of them in your study, please cite the following manuscript and the studies that developed the bioinformatic tools within the workflow:
+Ansorge, R., Romano, S., Sayavedra, L., Kupczok, A., Tegetmeyer, H. E., Dubilier, N., Petersen, J., *in prep*
