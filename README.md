@@ -55,14 +55,11 @@ info: the script uses a consensus reference for all samples. If you have one ref
 # 03. Strain number estimation: geneHaplotyping.viquas1.3.sh
 
 ## [03] Purpose of script:
-Shows detailed commands that were used for identification of genes with coverage below the range of coverage from gammaproteobacterial marker genes. These genes were classified as strain-specific in the MARsym paper. 
+Determine the number of gene versions for the provided set of genes using the tool ViQuaS
 
 ## [03] Programs that need to be installed to execute script:
-- samtools https://github.com/samtools/samtools
-- ucsc tools (executable faCount) https://github.com/adamlabadorf/ucsc_tools
-- bedtools https://github.com/arq5x/bedtools2
-- R https://www.r-project.org/
-- PhylaAmphora https://github.com/martinwu/Phyla_AMPHORA
+- ViQuaS https://academic.oup.com/bioinformatics/article/31/6/886/215466
+
 
 ## [03] Required input files:
 - Reference sequence in fasta format: ref.fasta
