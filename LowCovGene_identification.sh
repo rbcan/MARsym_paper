@@ -231,7 +231,7 @@ done >> RplottingLowCov.R
 echo "run RplottingLowCov.R"
 
 R CMD BATCH RplottingLowCov.R
-mv Rplots.pdf $sample.plots.pdf
+mv Rplots.pdf $ref.plots.pdf
 #####
 
 # step 6
