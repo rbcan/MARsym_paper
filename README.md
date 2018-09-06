@@ -95,6 +95,6 @@ Shows detailed commands that were used for identification of genes with coverage
 
 ## [04] Example of output files
 (among others)
-LowCovGenes_$sample - *list with low-coverage genes*
-LowCovGenes_noHypo_$sample - *list with low-coverage genes, excluding hypothetical proteins*
-$ref.plots.pdf - * plots with coverage distribution of genes*
+- LowCovGenes_$sample - *list with low-coverage genes*
+- LowCovGenes_noHypo_$sample - *list with low-coverage genes, excluding hypothetical proteins*
+- $ref.plots.pdf - * plots with coverage distribution of genes*
