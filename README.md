@@ -64,6 +64,12 @@ Shows detailed commands that were used for identification of genes with coverage
 - R https://www.r-project.org/
 - PhylaAmphora https://github.com/martinwu/Phyla_AMPHORA
 
-## [03] Example of output files for sample s1
+## [03] Required input files:
+- Reference sequence in fasta format: ref.fasta
+info: the script uses a consensus reference for all samples. If you have one reference per sample, you need to replace all $ref in the code with $sample
+- s1.real.bam - bamfiles with readgroups and realigned reads around INDELs
+  OR (depends on sample/question)
+- 100x.s1.bam - downsampled bam file (with readgroups and realigned reads around INDELs) with target read coverage 100x
 
+## [03] Example of output files for sample s1
 
