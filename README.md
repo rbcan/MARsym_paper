@@ -1,4 +1,4 @@
-# 00. These scripts are purely for understanding the details of the computing steps in the MARsym paper. They are not intended as tools for further usage and should be studied accordingly.
+# 00. These scripts are purely intended as a descriptive extention to the computational methodologies used in the MARsym paper. They are not intended as tools for further usage and should be considered accordingly.
 
 
 # 01. Mapping: mapping.bbmapv36x.sh 
@@ -28,7 +28,7 @@ info: the script uses a consensus reference for all samples. If you have one ref
 
 ## [02] Purpose of script:
 Shows detailed commands that were used for SNP calling in the MARsym paper.
-Script calls SNPs on mapped reads to a reference with GATK and a ploidy setting of 10. Input files can be created with MARsym_mapping.
+Script calls SNPs on mapped reads to a reference using GATK and a ploidy setting of 10. Input files can be created with MARsym_mapping.
 
 ## [02] Programs that need to be installed to execute script:
 - GenomeAnalysisToolKit (GATK) v3.3.0 https://software.broadinstitute.org/gatk/download/ (for later versions command details might need to be adatpted)
