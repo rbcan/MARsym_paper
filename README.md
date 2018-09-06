@@ -55,11 +55,11 @@ info: the script uses a consensus reference for all samples. If you have one ref
 # 03. Strain number estimation: geneHaplotyping.viquas1.3.sh
 
 ## [03] Purpose of script:
-Determine the number of gene versions for the provided set of genes using the tool ViQuaS
+Shows detailed commands that were used for estimating the number of gene versions for the provided set of genes using the tool ViQuaS in the MARsym paper.
 
 ## [03] Programs that need to be installed to execute script:
 - ViQuaS https://academic.oup.com/bioinformatics/article/31/6/886/215466
-
+- samtools https://github.com/samtools/samtools
 
 ## [03] Required input files:
 - Reference sequence in fasta format: ref.fasta
@@ -69,4 +69,17 @@ info: the script uses a consensus reference for all samples. If you have one ref
 - 100x.s1.bam - downsampled bam file (with readgroups and realigned reads around INDELs) with target read coverage 100x
 
 ## [03] Example of output files for sample s1
+- Spectrum-file contains reconstructed fasta sequences and abundance of sequence
+- Richness-file contains f_min value. We discarded all reconstructed sequences below this frequency
+
+# 04. Identification of low-coverage genes
+Shows detailed commands that were used for identification of genes with coverage below the range of coverage from gammaproteobacterial marker genes. These genes were classified as strain-specific in the MARsym paper. 
+
+## [04] Programs that need to be installed to execute script:
+- samtools https://github.com/samtools/samtools
+- ucsc tools (executable faCount) https://github.com/adamlabadorf/ucsc_tools
+- bedtools https://github.com/arq5x/bedtools2
+- R https://www.r-project.org/
+- PhylaAmphora https://github.com/martinwu/Phyla_AMPHORA
+
 
