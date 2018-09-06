@@ -1,4 +1,4 @@
-These scripts are purely for understanding the details of the computing steps in the MARsym paper. They are not intended as tools for further usage and should be studied accordingly.
+#These scripts are purely for understanding the details of the computing steps in the MARsym paper. They are not intended as tools for further usage and should be studied accordingly.
 
 
 # 01. Mapping: mapping.bbmapv36x.sh 
