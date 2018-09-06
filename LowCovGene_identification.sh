@@ -17,11 +17,11 @@ exec > $logfile 2>&1
 
 mkdir -p lowcov
 cd lowcov
-sample_names="<s1> <s2> <s3> ... <sn>" # Replace <s1> <s2> <s3> ... <sn> with your sample IDs separated by a space each. You need to provide sn.bam
+sample_names="<s1> <s2> <s3> ... <sn>" # Replace <s1> <s2> <s3> ... <sn> with your sample IDs separated by a space each. You need to provide sn.real.bam
 ref="<ref>" # Replace <ref> with reference name for which you have ref.fasta, ref.gff (gff3 file containing annotions), ref.faa (amino acid seuqences for annotated proteins)
 ### info: this script uses a consensus reference for the samples. If you have one reference per sample, you need to replave all $ref in the code below with $sample 
 genome_files="/path/to/genome_files" # folder to your genome files ref.fasta, ref.gff, ref.faa
-bamfolder="/path/to/genome_files" # folder to your sorted read alignment files sn.bam and index files sn.bai
+bamfolder="/path/to/bam_files" # folder to your sorted read alignment files sn.real.bam or downsampled 100x.sn.bam (in the latter case change input bam-file name in script)
 tools="/path/to/tools" # folder to tools PhylaAmphora, ucsc tools
 
 # step 1
@@ -31,7 +31,7 @@ tools="/path/to/tools" # folder to tools PhylaAmphora, ucsc tools
  for sample in $sample_names
  do
  echo "=> processing sample $sample"
- bedtools coverage -abam $bamfolder/$sample.bam -b $genome_files/$ref.gff -d > CovPerBase_$sample.txt
+ bedtools coverage -abam $bamfolder/$sample.real.bam -b $genome_files/$ref.gff -d > CovPerBase_$sample.txt
  awk -F ";Name=" '{print $1"\t"$NF}' CovPerBase_$sample.txt | awk -F "\t" '{print $9"\t"$NF}' > xx && mv xx CovPerBase_$sample.txt
  echo -e "gene\tcoverage" | cat - CovPerBase_$sample.txt > xx && mv xx CovPerBase_$sample.txt
  done
