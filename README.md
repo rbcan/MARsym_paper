@@ -102,4 +102,4 @@ Shows detailed commands that were used for identification of genes with coverage
 --
 
 If you find these workflows useful and use some of them in your study, please cite the following manuscript and the studies that developed the bioinformatic tools within the workflow:
-Ansorge, R., Romano, S., Sayavedra, L., Kupczok, A., Tegetmeyer, H. E., Dubilier, N., Petersen, J., *in prep*
+**Ansorge, R., Romano, S., Sayavedra, L., Kupczok, A., Tegetmeyer, H. E., Dubilier, N., Petersen, J.** Diversity matters: Deep-sea mussels harbor multiple symbiont strains, *in prep*
