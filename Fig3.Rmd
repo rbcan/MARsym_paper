@@ -1,0 +1,112 @@
+---
+title: "Plots_for_Figure3"
+author: "Rebecca_Ansorge"
+date: "July 14, 2019"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+library(ggplot2)
+library(data.table)
+library(Hmisc)
+```
+
+```{r id95 100x}
+# splot cumulative number of strains for all sites
+
+# Lilliput
+strainsLilli100x <- fread('/PATH/strains.100x.rarfact.lilli.id95.csv', sep="\t")
+strLi100x <- melt(strainsLilli100x, id.vars="number", 
+              measure.vars = grep("^l", names(strainsLilli100x), value = TRUE))
+l100x<-data.table(strainsLilli100x[,c(1,2,8,3:7)])
+lli100x <- data.table(strainsLilli100x[,c(1,2,8)], value=rowMeans(l100x[,-c(1:3)],na.rm=TRUE))
+
+# Clueless
+strainsClue100x <- fread('/PATH/strains.100x.rarfact.clue.id95.csv', sep="\t")
+strCl100x <- melt(strainsClue100x, id.vars="number", 
+              measure.vars = grep("^c", names(strainsClue100x), value = TRUE))
+h100x<-data.table(strainsClue100x[,c(1,2,8,3:7)])
+hcl100x <- data.table(strainsClue100x[,c(1,2,8)], value=rowMeans(h100x[,-c(1:3)],na.rm=TRUE))
+
+# Semenov (B. puteoserpentis)
+strainsBput100x <- fread('/PATH/strains.100x.rarfact.bput.id95.csv', sep="\t")
+strBp100x <- melt(strainsBput100x, id.vars="number", 
+              measure.vars = grep("^bp", names(strainsBput100x), value = TRUE))
+s100x<-data.table(strainsBput100x[,c(1,2,6,3:5)])
+sbp100x <- data.table(strainsBput100x[,c(1,2,6)], value=rowMeans(s100x[,-c(1:3)],na.rm=TRUE))
+
+# Lucky Strike (B. azoricus)
+strainsBaz100x <- fread('/PATH/strains.100x.rarfact.baz.id95.csv', sep="\t")
+strBa100x <- melt(strainsBaz100x, id.vars="number", 
+              measure.vars = grep("^ba", names(strainsBaz100x), value = TRUE))
+b100x<-data.table(strainsBaz100x[,c(1,2,8,3:7)])
+bba100x <- data.table(strainsBaz100x[,c(1,2,8)], value=rowMeans(b100x[,-c(1:3)],na.rm=TRUE))
+
+# lilli max strain
+msl100x <- fread('/PATH/max.strno.dist.lilli.100x', sep="\t")
+strmsl100x <- melt(msl100x, id.vars="number", 
+              measure.vars = grep("l", names(msl100x), value = TRUE))
+
+# clue max strain
+msc100x <- fread('/PATH/max.strno.dist.clue.100x', sep="\t")
+strmsc100x <- melt(msc100x, id.vars="number", 
+              measure.vars = grep("c", names(msc100x), value = TRUE))
+
+# bput max strain
+msbp100x <- fread('/PATH/max.strno.dist.bput.100x', sep="\t")
+strmsbp100x <- melt(msbp100x, id.vars="number", 
+              measure.vars = grep("bp", names(msbp100x), value = TRUE))
+
+# baz max strain
+msba100x <- fread('/PATH/max.strno.dist.baz.100x', sep="\t")
+strmsba100x <- melt(msba100x, id.vars="number", 
+              measure.vars = grep("ba", names(msba100x), value = TRUE))
+
+strLi100x[ , site := 'lilli']
+strCl100x[ , site := 'clue']
+strBp100x[ , site := 'bput']
+strBa100x[ , site := 'baz']
+strmsl100x[ , site := 'lilli']
+strmsc100x[ , site := 'clue']
+strmsbp100x[ , site := 'bput']
+strmsba100x[ , site := 'baz']
+
+strAllpoints100x <- rbind(strLi100x, strCl100x, strBp100x, strBa100x, fill = TRUE)
+strAll100x <- rbind(lli100x, hcl100x, sbp100x, bba100x, fill = TRUE)
+maxAll100x <- rbind(strmsl100x, strmsc100x, strmsbp100x, strmsba100x, fill = TRUE)
+
+```
+
+
+```{r id95 plotting}
+
+# Figure 3a
+figure3a <- ggplot(strAllpoints100x, aes(number, value)) + 
+  geom_point(aes(colour = site), shape=1, size = 2) + 
+  geom_line(data=strAll100x, aes(colour = site), size = 2, alpha=0.5) +
+  geom_point(data=maxAll100x, aes(colour = site), shape=1, size=2) + 
+  geom_line(data=maxAll100x, aes(colour = site), size = 2, alpha=0.5) +
+  scale_y_continuous(limits = c(0,100), breaks=seq(0, 100, 20)) +
+  scale_x_continuous(limits = c(0.8,9), breaks=seq(0, 9, 2))
+figure3a
+
+```
+
+```{r cov strain correl}
+
+# Figure 3b
+
+covstrain <- fread('/PATH/cov_strain_correl.csv', sep="\t")
+
+ggplot(covstrain, aes(cov, strains)) + geom_point(aes(colour = site), shape=1, size = 2) +
+  scale_y_continuous(limits = c(0,20), breaks=seq(0, 20, 5)) +
+  geom_smooth(method=lm, se=FALSE)
+
+covstrain_sub <- covstrain[,3:4]
+corcovstrain <- rcorr(as.matrix(covstrain_sub), type="spearman")
+corcovstrain$r # print corr. coefficient: 0.9325759
+corcovstrain$P # print corr. p-value: 1.735715e-08
+
+```

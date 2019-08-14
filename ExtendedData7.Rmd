@@ -1,0 +1,243 @@
+---
+title: "Plots_for_ExtendedData7"
+author: "Rebecca_Ansorge"
+date: "July 14, 2019"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+library(ggplot2)
+library(data.table)
+```
+
+```{r id95}
+# splot cumulative number of strains for all sites
+
+# Lilliput
+strainsLilli <- fread('/PATH/strains.rarfact.lilli.id95.csv', sep="\t")
+strLi <- melt(strainsLilli, id.vars="number", 
+              measure.vars = grep("^l", names(strainsLilli), value = TRUE))
+l<-data.table(strainsLilli[,c(1,2,8,3:7)])
+lli <- data.table(strainsLilli[,c(1,2,8)], value=rowMeans(l[,-c(1:3)],na.rm=TRUE))
+
+# Clueless
+strainsClue <- fread('/PATH/strains.rarfact.clue.id95.csv', sep="\t")
+strCl <- melt(strainsClue, id.vars="number", 
+              measure.vars = grep("^c", names(strainsClue), value = TRUE))
+h<-data.table(strainsClue[,c(1,2,8,3:7)])
+hcl <- data.table(strainsClue[,c(1,2,8)], value=rowMeans(h[,-c(1:3)],na.rm=TRUE))
+
+# Semenov (B. puteoserpentis)
+strainsBput <- fread('/PATH/strains.rarfact.bput.id95.csv', sep="\t")
+strBp <- melt(strainsBput, id.vars="number", 
+              measure.vars = grep("^bp", names(strainsBput), value = TRUE))
+s<-data.table(strainsBput[,c(1,2,6,3:5)])
+sbp <- data.table(strainsBput[,c(1,2,6)], value=rowMeans(s[,-c(1:3)],na.rm=TRUE))
+
+# Lucky Strike (B. azoricus)
+strainsBaz <- fread('/PATH/strains.rarfact.baz.id95.csv', sep="\t")
+strBa <- melt(strainsBaz, id.vars="number", 
+              measure.vars = grep("^ba", names(strainsBaz), value = TRUE))
+b<-data.table(strainsBaz[,c(1,2,8,3:7)])
+bba <- data.table(strainsBaz[,c(1,2,8)], value=rowMeans(b[,-c(1:3)],na.rm=TRUE))
+
+# lilli max strain
+msl <- fread('/PATH/max.strno.dist.lilli.fullcov', sep="\t")
+strmsl <- melt(msl, id.vars="number", 
+              measure.vars = grep("l", names(msl), value = TRUE))
+
+# clue max strain
+msc <- fread('/PATH/max.strno.dist.clue.fullcov', sep="\t")
+strmsc <- melt(msc, id.vars="number", 
+              measure.vars = grep("c", names(msc), value = TRUE))
+
+# bput max strain
+msbp <- fread('/PATH/max.strno.dist.bput.fullcov', sep="\t")
+strmsbp <- melt(msbp, id.vars="number", 
+              measure.vars = grep("bp", names(msbp), value = TRUE))
+
+# baz max strain
+msba <- fread('/PATH/max.strno.dist.baz.fullcov', sep="\t")
+strmsba <- melt(msba, id.vars="number", 
+              measure.vars = grep("ba", names(msba), value = TRUE))
+
+strLi[ , site := 'lilli']
+strCl[ , site := 'clue']
+strBp[ , site := 'bput']
+strBa[ , site := 'baz']
+strmsl[ , site := 'lilli']
+strmsc[ , site := 'clue']
+strmsbp[ , site := 'bput']
+strmsba[ , site := 'baz']
+
+strAllpoints <- rbind(strLi, strCl, strBp, strBa, fill = TRUE)
+strAll <- rbind(lli, hcl, sbp, bba, fill = TRUE)
+maxAll <- rbind(strmsl, strmsc, strmsbp, strmsba, fill = TRUE)
+
+```
+
+
+```{r id95 only phylaAmphora}
+# splot cumulative number of strains for all sites
+
+# Lilliput
+strainsLillip <- fread('/PATH/strains.rarfact.lilli.id95.phylaamphora.csv', sep="\t")
+strLip <- melt(strainsLillip, id.vars="number", 
+              measure.vars = grep("^l", names(strainsLillip), value = TRUE))
+lp<-data.table(strainsLillip[,c(1,2,8,3:7)])
+llip <- data.table(strainsLillip[,c(1,2,8)], value=rowMeans(lp[,-c(1:3)],na.rm=TRUE))
+
+# Clueless
+strainsCluep <- fread('/PATH/strains.rarfact.clue.id95.phylaamphora.csv', sep="\t")
+strClp <- melt(strainsClue, id.vars="number", 
+              measure.vars = grep("^c", names(strainsClue), value = TRUE))
+hp<-data.table(strainsCluep[,c(1,2,8,3:7)])
+hclp <- data.table(strainsCluep[,c(1,2,8)], value=rowMeans(hp[,-c(1:3)],na.rm=TRUE))
+
+# Semenov (B. puteoserpentis)
+strainsBputp <- fread('/PATH/strains.rarfact.bput.id95.phylaamphora.csv', sep="\t")
+strBpp <- melt(strainsBputp, id.vars="number", 
+              measure.vars = grep("^bp", names(strainsBputp), value = TRUE))
+sp<-data.table(strainsBputp[,c(1,2,6,3:5)])
+sbpp <- data.table(strainsBputp[,c(1,2,6)], value=rowMeans(sp[,-c(1:3)],na.rm=TRUE))
+
+# Lucky Strike (B. azoricus)
+strainsBazp <- fread('/PATH/strains.rarfact.baz.id95.phylaamphora.csv', sep="\t")
+strBap <- melt(strainsBazp, id.vars="number", 
+              measure.vars = grep("^ba", names(strainsBazp), value = TRUE))
+bp<-data.table(strainsBazp[,c(1,2,8,3:7)])
+bbap <- data.table(strainsBazp[,c(1,2,8)], value=rowMeans(bp[,-c(1:3)],na.rm=TRUE))
+
+# lilli max strain
+mslp <- fread('/PATH/max.strno.dist.lilli.fullcov.phylaamphora', sep="\t")
+strmslp <- melt(mslp, id.vars="number", 
+              measure.vars = grep("l", names(mslp), value = TRUE))
+
+# clue max strain
+mscp <- fread('/PATH/max.strno.dist.clue.fullcov.phylaamphora', sep="\t")
+strmscp <- melt(mscp, id.vars="number", 
+              measure.vars = grep("c", names(mscp), value = TRUE))
+
+# bput max strain
+msbpp <- fread('/PATH/max.strno.dist.bput.fullcov.phylaamphora', sep="\t")
+strmsbpp <- melt(msbpp, id.vars="number", 
+              measure.vars = grep("bp", names(msbpp), value = TRUE))
+
+# baz max strain
+msbap <- fread('/PATH/max.strno.dist.baz.fullcov.phylaamphora', sep="\t")
+strmsbap <- melt(msbap, id.vars="number", 
+              measure.vars = grep("ba", names(msbap), value = TRUE))
+
+
+strLip[ , site := 'lilli']
+strClp[ , site := 'clue']
+strBpp[ , site := 'bput']
+strBap[ , site := 'baz']
+strmslp[ , site := 'lilli']
+strmscp[ , site := 'clue']
+strmsbpp[ , site := 'bput']
+strmsbap[ , site := 'baz']
+
+strAllpointsp <- rbind(strLip, strClp, strBpp, strBap, fill = TRUE)
+strAllp <- rbind(llip, hclp, sbpp, bbap, fill = TRUE)
+maxAllp <- rbind(strmslp, strmscp, strmsbpp, strmsbap, fill = TRUE)
+
+```
+
+```{r id95 100x phylaamphora}
+# splot cumulative number of strains for all sites
+
+# Lilliput
+strainsLillip100x <- fread('/PATH/strains.100x.rarfact.lilli.id95.phylaamphora.csv', sep="\t")
+strLip100x <- melt(strainsLillip100x, id.vars="number", 
+              measure.vars = grep("^l", names(strainsLillip100x), value = TRUE))
+lp100x<-data.table(strainsLillip100x[,c(1,2,8,3:7)])
+llip100x <- data.table(strainsLillip100x[,c(1,2,8)], value=rowMeans(lp100x[,-c(1:3)],na.rm=TRUE))
+
+# Clueless
+strainsCluep100x <- fread('/PATH/strains.100x.rarfact.clue.id95.phylaamphora.csv', sep="\t")
+strClp100x <- melt(strainsCluep100x, id.vars="number", 
+              measure.vars = grep("^c", names(strainsCluep100x), value = TRUE))
+hp100x<-data.table(strainsCluep100x[,c(1,2,8,3:7)])
+hclp100x <- data.table(strainsCluep100x[,c(1,2,8)], value=rowMeans(hp100x[,-c(1:3)],na.rm=TRUE))
+
+# Semenov (B. puteoserpentis)
+strainsBputp100x <- fread('/PATH/strains.100x.rarfact.bput.id95.phylaamphora.csv', sep="\t")
+strBpp100x <- melt(strainsBputp100x, id.vars="number", 
+              measure.vars = grep("^bp", names(strainsBputp100x), value = TRUE))
+sp100x<-data.table(strainsBputp100x[,c(1,2,6,3:5)])
+sbpp100x <- data.table(strainsBputp100x[,c(1,2,6)], value=rowMeans(sp100x[,-c(1:3)],na.rm=TRUE))
+
+# Lucky Strike (B. azoricus)
+strainsBazp100x <- fread('/PATH/strains.100x.rarfact.baz.id95.phylaamphora.csv', sep="\t")
+strBap100x <- melt(strainsBazp100x, id.vars="number", 
+              measure.vars = grep("^ba", names(strainsBazp100x), value = TRUE))
+bp100x<-data.table(strainsBazp100x[,c(1,2,8,3:7)])
+bbap100x <- data.table(strainsBazp100x[,c(1,2,8)], value=rowMeans(bp100x[,-c(1:3)],na.rm=TRUE))
+
+# lilli max strain
+msl100xp <- fread('/PATH/max.strno.dist.lilli.100x.phylaamphora', sep="\t")
+strmsl100xp <- melt(msl100xp, id.vars="number", 
+              measure.vars = grep("l", names(msl100xp), value = TRUE))
+
+# clue max strain
+msc100xp <- fread('/PATH/max.strno.dist.clue.100x.phylaamphora', sep="\t")
+strmsc100xp <- melt(msc100xp, id.vars="number", 
+              measure.vars = grep("c", names(msc100xp), value = TRUE))
+
+# bput max strain
+msbp100xp <- fread('/PATH/max.strno.dist.bput.100x.phylaamphora', sep="\t")
+strmsbp100xp <- melt(msbp100xp, id.vars="number", 
+              measure.vars = grep("bp", names(msbp100xp), value = TRUE))
+
+# baz max strain
+msba100xp <- fread('/PATH/max.strno.dist.baz.100x.phylaamphora', sep="\t")
+strmsba100xp <- melt(msba100xp, id.vars="number", 
+              measure.vars = grep("ba", names(msba100xp), value = TRUE))
+
+
+strLip100x[ , site := 'lilli']
+strClp100x[ , site := 'clue']
+strBpp100x[ , site := 'bput']
+strBap100x[ , site := 'baz']
+strmsl100xp[ , site := 'lilli']
+strmsc100xp[ , site := 'clue']
+strmsbp100xp[ , site := 'bput']
+strmsba100xp[ , site := 'baz']
+
+strAllpointsp100x <- rbind(strLip100x, strClp100x, strBpp100x, strBap100x, fill = TRUE)
+strAllp100x <- rbind(llip100x, hclp100x, sbpp100x, bbap100x, fill = TRUE)
+maxAll100xp <- rbind(strmsl100xp, strmsc100xp, strmsbp100xp, strmsba100xp, fill = TRUE)
+
+```
+
+```{r id95 plotting}
+
+strAll[ , type := 'fullcov']
+maxAll[ , type := 'fullcov']
+strAllpoints[ , type := 'fullcov']
+strAllp[ , type := 'onlyPhylaAmphora_fullcov']
+maxAllp[ , type := 'onlyPhylaAmphora_fullcov']
+strAllpointsp[ , type := 'onlyPhylaAmphora_fullcov']
+strAllp100x[ , type := 'onlyPhylaAmphora_100x']
+maxAll100xp[ , type := 'onlyPhylaAmphora_100x']
+strAllpointsp100x[ , type := 'onlyPhylaAmphora_100x']
+
+line <-rbind(strAllp100x, strAllp, strAll, fill = TRUE)
+datapoints <- rbind(strAllpointsp100x, strAllpointsp, strAllpoints, fill = TRUE)
+maxpoints <- rbind(maxAll100xp, maxAllp, maxAll, fill = TRUE)
+
+# Extended Data 7
+figure7 <- ggplot(datapoints, aes(number, value)) + geom_point(aes(colour = site), shape=1, size = 1.5) + 
+  geom_line(data=line, aes(colour = site), size = 2, alpha=0.5) +
+  geom_point(data=maxpoints, aes(colour = site), shape=1, size=1.5) + 
+  geom_line(data=maxpoints, aes(colour = site), size = 1, alpha=0.5) +
+  scale_y_continuous(limits = c(0,100), breaks=seq(0, 100, 20)) +
+  scale_x_continuous(limits = c(0.8,16), breaks=seq(0, 16, 2))
+
+figure7.fac <- figure7 + facet_grid(type ~ ., scales = "free_x")
+figure7.fac
+
+```

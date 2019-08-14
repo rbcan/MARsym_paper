@@ -1,0 +1,392 @@
+---
+title: "Plots_for_ExtendedData5"
+author: "Rebecca_Ansorge"
+date: "July 14, 2019"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r load libs}
+### load libraries 
+library(ggplot2)
+library(data.table)
+```
+
+```{r load pi lilli}
+# per site within and between individual pi: Lilliput
+
+Pi_Lilli <- fread('/PATH/Pi_Lilli.id95.100x.csv', sep="\t")
+
+# extract subsets
+Pi_L102 <- melt(Pi_Lilli, id.vars="Name", 
+              measure.vars = grep("^pi_L102$", names(Pi_Lilli), value = TRUE))
+Pi_L104 <- melt(Pi_Lilli, id.vars="Name", 
+              measure.vars = grep("^pi_L104$", names(Pi_Lilli), value = TRUE))
+Pi_L105 <- melt(Pi_Lilli, id.vars="Name", 
+              measure.vars = grep("^pi_L105$", names(Pi_Lilli), value = TRUE))
+Pi_L51 <- melt(Pi_Lilli, id.vars="Name", 
+              measure.vars = grep("^pi_L51$", names(Pi_Lilli), value = TRUE))
+Pi_L54 <- melt(Pi_Lilli, id.vars="Name", 
+              measure.vars = grep("^pi_L54$", names(Pi_Lilli), value = TRUE))
+Pi_L102_L104 <- melt(Pi_Lilli, id.vars="Name", 
+              measure.vars = grep("^pi_L102_L104$", names(Pi_Lilli), value = TRUE))
+Pi_L102_L105 <- melt(Pi_Lilli, id.vars="Name", 
+              measure.vars = grep("^pi_L102_L105$", names(Pi_Lilli), value = TRUE))
+Pi_L102_L51 <- melt(Pi_Lilli, id.vars="Name", 
+              measure.vars = grep("^pi_L102_L51$", names(Pi_Lilli), value = TRUE))
+Pi_L102_L54 <- melt(Pi_Lilli, id.vars="Name", 
+              measure.vars = grep("^pi_L102_L54$", names(Pi_Lilli), value = TRUE))
+Pi_L104_L105 <- melt(Pi_Lilli, id.vars="Name", 
+              measure.vars = grep("^pi_L104_L105$", names(Pi_Lilli), value = TRUE))
+Pi_L104_L51 <- melt(Pi_Lilli, id.vars="Name", 
+              measure.vars = grep("^pi_L104_L51$", names(Pi_Lilli), value = TRUE))
+Pi_L104_L54 <- melt(Pi_Lilli, id.vars="Name", 
+              measure.vars = grep("^pi_L104_L54$", names(Pi_Lilli), value = TRUE))
+Pi_L105_L51 <- melt(Pi_Lilli, id.vars="Name", 
+              measure.vars = grep("^pi_L105_L51$", names(Pi_Lilli), value = TRUE))
+Pi_L105_L54 <- melt(Pi_Lilli, id.vars="Name", 
+              measure.vars = grep("^pi_L105_L54$", names(Pi_Lilli), value = TRUE))
+Pi_L51_L54 <- melt(Pi_Lilli, id.vars="Name", 
+              measure.vars = grep("^pi_L51_L54$", names(Pi_Lilli), value = TRUE))
+
+# tag subsets with wind: within individual pi; bind: between individual pi
+Pi_L102[ , Pi := 'intra-host population']
+Pi_L102[ , Ind := '1']
+
+Pi_L104[ , Pi := 'intra-host population']
+Pi_L104[ , Ind := '2']
+
+Pi_L105[ , Pi := 'intra-host population']
+Pi_L105[ , Ind := '3']
+
+Pi_L51[ , Pi := 'intra-host population']
+Pi_L51[ , Ind := '4']
+
+Pi_L54[ ,Pi := 'intra-host population']
+Pi_L54[ , Ind := '5']
+
+Pi_L102_L104[ , Pi := 'pairwise between-host population']
+Pi_L102_L104[ , Ind := '1.2']
+
+Pi_L102_L105[ , Pi := 'pairwise between-host population']
+Pi_L102_L105[ , Ind := '1.3']
+
+Pi_L102_L51[ , Pi := 'pairwise between-host population']
+Pi_L102_L51[ , Ind := '1.4']
+
+Pi_L102_L54[ , Pi := 'pairwise between-host population']
+Pi_L102_L54[ , Ind := '1.5']
+
+Pi_L104_L105[ , Pi := 'pairwise between-host population']
+Pi_L104_L105[ , Ind := '2.3']
+
+Pi_L104_L51[ , Pi := 'pairwise between-host population']
+Pi_L104_L51[ , Ind := '2.4']
+
+Pi_L104_L54[ , Pi := 'pairwise between-host population']
+Pi_L104_L54[ , Ind := '2.5']
+
+Pi_L105_L51[ , Pi := 'pairwise between-host population']
+Pi_L105_L51[ , Ind := '3.4']
+
+Pi_L105_L54[ , Pi := 'pairwise between-host population']
+Pi_L105_L54[ , Ind := '3.5']
+
+Pi_L51_L54[ , Pi := 'pairwise between-host population']
+Pi_L51_L54[ , Ind := '4.5']
+
+
+# combine tagged subsets again  
+Pi_combiLilli <- rbind(Pi_L102, Pi_L104, Pi_L105, Pi_L51, Pi_L54, Pi_L102_L104, Pi_L102_L105, Pi_L102_L51, Pi_L102_L54, Pi_L104_L105, Pi_L104_L51, Pi_L104_L54, Pi_L105_L51, Pi_L105_L54, Pi_L51_L54, fill = TRUE)
+Pi_combiLilli[ , site := 'B. sp. Lilliput']
+
+Pi_combiLilli_manove <- cbind(Pi_L102, Pi_L104, Pi_L105, Pi_L51, Pi_L54, Pi_L102_L104, Pi_L102_L105, Pi_L102_L51, Pi_L102_L54, Pi_L104_L105, Pi_L104_L51, Pi_L104_L54, Pi_L105_L51, Pi_L105_L54, Pi_L51_L54, fill = TRUE)
+```
+
+```{r load pi clue}
+# per site within and between individual pi: Clueless
+
+# import data
+Pi_Clue <- fread('/PATH/Pi_Clue.id95.100x.csv', sep="\t")
+
+# extract subsets
+Pi_C2 <- melt(Pi_Clue, id.vars="Name", 
+              measure.vars = grep("^pi_C2$", names(Pi_Clue), value = TRUE))
+Pi_C3 <- melt(Pi_Clue, id.vars="Name", 
+              measure.vars = grep("^pi_C3$", names(Pi_Clue), value = TRUE))
+Pi_C4 <- melt(Pi_Clue, id.vars="Name", 
+              measure.vars = grep("^pi_C4$", names(Pi_Clue), value = TRUE))
+Pi_C5 <- melt(Pi_Clue, id.vars="Name", 
+              measure.vars = grep("^pi_C5$", names(Pi_Clue), value = TRUE))
+Pi_C6 <- melt(Pi_Clue, id.vars="Name", 
+              measure.vars = grep("^pi_C6$", names(Pi_Clue), value = TRUE))
+Pi_C2_C3 <- melt(Pi_Clue, id.vars="Name", 
+              measure.vars = grep("^pi_C2_C3$", names(Pi_Clue), value = TRUE))
+Pi_C2_C4 <- melt(Pi_Clue, id.vars="Name", 
+              measure.vars = grep("^pi_C2_C4$", names(Pi_Clue), value = TRUE))
+Pi_C2_C5 <- melt(Pi_Clue, id.vars="Name", 
+              measure.vars = grep("^pi_C2_C5$", names(Pi_Clue), value = TRUE))
+Pi_C2_C6 <- melt(Pi_Clue, id.vars="Name", 
+              measure.vars = grep("^pi_C2_C6$", names(Pi_Clue), value = TRUE))
+Pi_C3_C4 <- melt(Pi_Clue, id.vars="Name", 
+              measure.vars = grep("^pi_C3_C4$", names(Pi_Clue), value = TRUE))
+Pi_C3_C5 <- melt(Pi_Clue, id.vars="Name", 
+              measure.vars = grep("^pi_C3_C5$", names(Pi_Clue), value = TRUE))
+Pi_C3_C6 <- melt(Pi_Clue, id.vars="Name", 
+              measure.vars = grep("^pi_C3_C6$", names(Pi_Clue), value = TRUE))
+Pi_C4_C5 <- melt(Pi_Clue, id.vars="Name", 
+              measure.vars = grep("^pi_C4_C5$", names(Pi_Clue), value = TRUE))
+Pi_C4_C6 <- melt(Pi_Clue, id.vars="Name", 
+              measure.vars = grep("^pi_C4_C6$", names(Pi_Clue), value = TRUE))
+Pi_C5_C6 <- melt(Pi_Clue, id.vars="Name", 
+              measure.vars = grep("^pi_C5_C6$", names(Pi_Clue), value = TRUE))
+
+# tag subsets with wind: within individual pi; bind: between individual pi
+Pi_C2[ , Pi := 'intra-host population']
+Pi_C2[ , Ind := '1']
+
+Pi_C3[ , Pi := 'intra-host population']
+Pi_C3[ , Ind := '2']
+
+Pi_C4[ , Pi := 'intra-host population']
+Pi_C4[ , Ind := '3']
+
+Pi_C5[ , Pi := 'intra-host population']
+Pi_C5[ , Ind := '4']
+
+Pi_C6[ , Pi := 'intra-host population']
+Pi_C6[ , Ind := '5']
+
+Pi_C2_C3[ , Pi := 'pairwise between-host population']
+Pi_C2_C3[ , Ind := '1.2']
+
+Pi_C2_C4[ , Pi := 'pairwise between-host population']
+Pi_C2_C4[ , Ind := '1.3']
+
+Pi_C2_C5[ , Pi := 'pairwise between-host population']
+Pi_C2_C5[ , Ind := '1.4']
+
+Pi_C2_C6[ , Pi := 'pairwise between-host population']
+Pi_C2_C6[ , Ind := '1.5']
+
+Pi_C3_C4[ , Pi := 'pairwise between-host population']
+Pi_C3_C4[ , Ind := '2.3']
+
+Pi_C3_C5[ , Pi := 'pairwise between-host population']
+Pi_C3_C5[ , Ind := '2.4']
+
+Pi_C3_C6[ , Pi := 'pairwise between-host population']
+Pi_C3_C6[ , Ind := '2.5']
+
+Pi_C4_C5[ , Pi := 'pairwise between-host population']
+Pi_C4_C5[ , Ind := '3.4']
+
+Pi_C4_C6[ , Pi := 'pairwise between-host population']
+Pi_C4_C6[ , Ind := '3.5']
+
+Pi_C5_C6[ , Pi:= 'pairwise between-host population']
+Pi_C5_C6[ , Ind := '4.5']
+
+
+# combine tagged subsets again  
+Pi_combiClue <- rbind(Pi_C2, Pi_C3, Pi_C4, Pi_C5, Pi_C6, Pi_C2_C3, Pi_C2_C4, Pi_C2_C5, Pi_C2_C6, Pi_C3_C4, Pi_C3_C5, Pi_C3_C6, Pi_C4_C5, Pi_C4_C6, Pi_C5_C6, fill = TRUE)
+Pi_combiClue[, site := 'B. sp. Clueless']
+
+```
+
+```{r load pi baz}
+# per site within and between individual pi: Lucky Strike (B. azoricus)
+
+# import data
+Pi_Baz <- fread('/PATH/Pi_Baz.id95.100x.csv', sep="\t")
+
+# extract subsets
+Pi_F <- melt(Pi_Baz, id.vars="Name", 
+              measure.vars = grep("^pi_F$", names(Pi_Baz), value = TRUE))
+Pi_G <- melt(Pi_Baz, id.vars="Name", 
+              measure.vars = grep("^pi_G$", names(Pi_Baz), value = TRUE))
+Pi_H <- melt(Pi_Baz, id.vars="Name", 
+              measure.vars = grep("^pi_H$", names(Pi_Baz), value = TRUE))
+Pi_I <- melt(Pi_Baz, id.vars="Name", 
+              measure.vars = grep("^pi_I$", names(Pi_Baz), value = TRUE))
+Pi_J <- melt(Pi_Baz, id.vars="Name", 
+              measure.vars = grep("^pi_J$", names(Pi_Baz), value = TRUE))
+Pi_F_G <- melt(Pi_Baz, id.vars="Name", 
+              measure.vars = grep("^pi_F_G$", names(Pi_Baz), value = TRUE))
+Pi_F_H <- melt(Pi_Baz, id.vars="Name", 
+              measure.vars = grep("^pi_F_H$", names(Pi_Baz), value = TRUE))
+Pi_F_I <- melt(Pi_Baz, id.vars="Name", 
+              measure.vars = grep("^pi_F_I$", names(Pi_Baz), value = TRUE))
+Pi_F_J <- melt(Pi_Baz, id.vars="Name", 
+              measure.vars = grep("^pi_F_J$", names(Pi_Baz), value = TRUE))
+Pi_G_H <- melt(Pi_Baz, id.vars="Name", 
+              measure.vars = grep("^pi_G_H$", names(Pi_Baz), value = TRUE))
+Pi_G_I <- melt(Pi_Baz, id.vars="Name", 
+              measure.vars = grep("^pi_G_I$", names(Pi_Baz), value = TRUE))
+Pi_G_J <- melt(Pi_Baz, id.vars="Name", 
+              measure.vars = grep("^pi_G_J$", names(Pi_Baz), value = TRUE))
+Pi_H_I <- melt(Pi_Baz, id.vars="Name", 
+              measure.vars = grep("^pi_H_I$", names(Pi_Baz), value = TRUE))
+Pi_H_J <- melt(Pi_Baz, id.vars="Name", 
+              measure.vars = grep("^pi_H_J$", names(Pi_Baz), value = TRUE))
+Pi_I_J <- melt(Pi_Baz, id.vars="Name", 
+              measure.vars = grep("^pi_I_J$", names(Pi_Baz), value = TRUE))
+
+# tag subsets with wind: within individual pi; bind: between individual pi
+Pi_F[ , Pi := 'intra-host population']
+Pi_F[ , Ind := '1']
+
+Pi_G[ , Pi := 'intra-host population']
+Pi_G[ , Ind := '2']
+
+Pi_H[ , Pi := 'intra-host population']
+Pi_H[ , Ind := '3']
+
+Pi_I[ , Pi := 'intra-host population']
+Pi_I[ , Ind := '4']
+
+Pi_J[ , Pi := 'intra-host population']
+Pi_J[ , Ind := '5']
+
+Pi_F_G[ , Pi := 'pairwise between-host population']
+Pi_F_G[ , Ind := '1.2']
+
+Pi_F_H[ , Pi := 'pairwise between-host population']
+Pi_F_H[ , Ind := '1.3']
+
+Pi_F_I[ , Pi := 'pairwise between-host population']
+Pi_F_I[ , Ind := '1.4']
+
+Pi_F_J[ , Pi := 'pairwise between-host population']
+Pi_F_J[ , Ind := '1.5']
+
+Pi_G_H[ , Pi := 'pairwise between-host population']
+Pi_G_H[ , Ind := '2.3']
+
+Pi_G_I[ , Pi := 'pairwise between-host population']
+Pi_G_I[ , Ind := '2.4']
+
+Pi_G_J[ , Pi := 'pairwise between-host population']
+Pi_G_J[ , Ind := '2.5']
+
+Pi_H_I[ , Pi := 'pairwise between-host population']
+Pi_H_I[ , Ind := '3.4']
+
+Pi_H_J[ , Pi := 'pairwise between-host population']
+Pi_H_J[ , Ind := '3.5']
+
+Pi_I_J[ , Pi := 'pairwise between-host population']
+Pi_I_J[ , Ind := '4.5']
+
+
+# combine tagged subsets again  
+Pi_combiBaz <- rbind(Pi_F, Pi_G, Pi_H, Pi_I, Pi_J, Pi_F_G, Pi_F_H, Pi_F_I, Pi_F_J, Pi_G_H, Pi_G_I, Pi_G_J, Pi_H_I, Pi_H_J, Pi_I_J, fill = TRUE)
+Pi_combiBaz[ , site := 'B. azoricus']
+
+```
+
+```{r load pi bput}
+# per site within and between individual pi: Semenov (B. puteoserpentis)
+
+# import data
+Pi_BputSem <- fread('/PATH/Pi_BputSem.id95.100x.csv', sep="\t")
+
+# extract subsets
+Pi_BputSemA <- melt(Pi_BputSem, id.vars="Name", 
+              measure.vars = grep("^pi_BputSemA$", names(Pi_BputSem), value = TRUE))
+Pi_BputSemB <- melt(Pi_BputSem, id.vars="Name", 
+              measure.vars = grep("^pi_BputSemB$", names(Pi_BputSem), value = TRUE))
+Pi_BputSemC <- melt(Pi_BputSem, id.vars="Name", 
+              measure.vars = grep("^pi_BputSemC$", names(Pi_BputSem), value = TRUE))
+Pi_BputSemA_BputSemB <- melt(Pi_BputSem, id.vars="Name", 
+              measure.vars = grep("^pi_BputSemA_BputSemB$", names(Pi_BputSem), value = TRUE))
+Pi_BputSemA_BputSemC <- melt(Pi_BputSem, id.vars="Name", 
+              measure.vars = grep("^pi_BputSemA_BputSemC$", names(Pi_BputSem), value = TRUE))
+Pi_BputSemB_BputSemC <- melt(Pi_BputSem, id.vars="Name", 
+              measure.vars = grep("^pi_BputSemB_BputSemC$", names(Pi_BputSem), value = TRUE))
+
+
+# tag subsets with wind: within individual pi; bind: between individual pi
+Pi_BputSemA[ , Pi := 'intra-host population']
+Pi_BputSemA[ , Ind := '1']
+
+Pi_BputSemB[ , Pi := 'intra-host population']
+Pi_BputSemB[ , Ind := '2']
+
+Pi_BputSemC[ , Pi := 'intra-host population']
+Pi_BputSemC[ , Ind := '3']
+
+Pi_BputSemA_BputSemB[ , Pi := 'pairwise between-host population']
+Pi_BputSemA_BputSemB[ , Ind := '1.2']
+
+Pi_BputSemA_BputSemC[ , Pi := 'pairwise between-host population']
+Pi_BputSemA_BputSemC[ , Ind := '1.3']
+
+Pi_BputSemB_BputSemC[ , Pi := 'pairwise between-host population']
+Pi_BputSemB_BputSemC[ , Ind := '2.3']
+
+
+
+# combine tagged subsets again  
+Pi_combiBputSem <- rbind(Pi_BputSemA, Pi_BputSemB, Pi_BputSemC, Pi_BputSemA_BputSemB, Pi_BputSemA_BputSemC, Pi_BputSemB_BputSemC, fill = TRUE)
+Pi_combiBputSem[ , site := 'B. puteoserpentis']
+
+```
+
+```{r}
+# draw box plot Extended Data 5a
+
+Pi_combiBox <- rbind(Pi_combiBaz, Pi_combiBputSem, Pi_combiClue, Pi_combiLilli, fill = TRUE)
+box_combi<- ggplot(
+  data = Pi_combiBox,
+  mapping = aes(
+    x = Ind,
+    y = value,
+    fill = Pi
+    #color = "red"
+    )
+) + geom_boxplot(
+  outlier.size = 0.2
+  #outlier.colour = 'black'
+) + theme(axis.title.x=element_blank(),
+          #axis.text.x=element_blank(),
+          axis.ticks.x=element_blank(),
+          #axis.title.y=element_blank(),
+          #axis.text.y=element_blank(),
+          #axis.ticks.y=element_blank(),
+          legend.position="bottom")
+ #+ coord_cartesian(ylim = c(0, 0.04))
+pibox.fac <- box_combi + facet_grid(. ~ site) 
+pibox.fac
+
+```
+
+```{r}
+# draw box plot Extended Data 5b
+
+box_combiAv<- ggplot(
+  data = Pi_combiBox,
+  mapping = aes(
+    x = Pi,
+    y = value,
+    fill = Pi
+    #color = "red"
+    )
+) +
+  geom_boxplot(
+  outlier.size = 0.2
+  #outlier.colour = 'black'
+) + theme(axis.title.x=element_blank(),
+          #axis.text.x=element_blank(),
+          axis.ticks.x=element_blank(),
+          #axis.title.y=element_blank(),
+          #axis.text.y=element_blank(),
+          #axis.ticks.y=element_blank(),
+          legend.position="bottom")
+ #+ coord_cartesian(ylim = c(0, 0.04))
+
+piboxav.fac <- box_combiAv + facet_grid(. ~ site) 
+piboxav.fac
+
+```

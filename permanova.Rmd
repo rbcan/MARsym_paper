@@ -1,0 +1,213 @@
+---
+title: "Permanova"
+author: "Rebecca_Ansorge"
+date: "July 14, 2019"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+### load libraries 
+library(ggplot2)
+library(data.table)
+library(vegan)
+```
+
+```{r prepare input tables}
+# Lilli
+Pi_Lilli <- fread('/PATH/Pi_Lilli.id95.100x.csv', sep="\t")
+tPi_Lilli <- t(Pi_Lilli)
+write.table(tPi_Lilli, file = "tPi_Lilli", sep = "\t")
+system("sed -i '1d' tPi_Lilli")
+system("sed 's/pi_L[0-9]*_L[0-9]*/bind/g' tPi_Lilli | sed 's/pi_L[0-9]*/wind/g' > xx && mv xx tPi_Lilli")
+reload_tPi_Lilli <- read.csv("tPi_Lilli", sep="\t")
+
+# Clueless
+Pi_Clue <- fread('/PATH/Pi_Clue.id95.100x.csv', sep="\t")
+tPi_Clue <- t(Pi_Clue)
+write.table(tPi_Clue, file = "tPi_Clue", sep = "\t")
+system("sed -i '1d' tPi_Clue")
+system("sed 's/pi_C[0-9]*_C[0-9]*/bind/g' tPi_Clue | sed 's/pi_C[0-9]*/wind/g' > xx && mv xx tPi_Clue")
+reload_tPi_Clue <- read.csv("tPi_Clue", sep="\t")
+
+# BputSem
+Pi_BputSem <- fread('/PATH/Pi_BputSem.id95.100x.csv', sep="\t")
+tPi_BputSem <- t(Pi_BputSem)
+write.table(tPi_BputSem, file = "tPi_BputSem", sep = "\t")
+system("sed -i '1d' tPi_BputSem")
+system("sed 's/pi_BputSem[A,B,C]_BputSem[A,B,C]/bind/g' tPi_BputSem | sed 's/pi_BputSem[A,B,C]/wind/g' > xx && mv xx tPi_BputSem")
+reload_tPi_BputSem <- read.csv("tPi_BputSem", sep="\t")
+
+# Baz
+Pi_Baz <- fread('/PATH/Pi_Baz.id95.100x.csv', sep="\t")
+tPi_Baz <- t(Pi_Baz)
+write.table(tPi_Baz, file = "tPi_Baz", sep = "\t")
+system("sed -i '1d' tPi_Baz")
+system("sed 's/pi_[F,G,H,I,J]*_[F,G,H,I,J]*/bind/g' tPi_Baz | sed 's/pi_[F,G,H,I,J]/wind/g' > xx && mv xx tPi_Baz")
+reload_tPi_Baz <- read.csv("tPi_Baz", sep="\t")
+
+PiCo <- read.csv("/PATH/Pi.Core_all.id95.100x.list", sep="\t")
+t_PiCo <- t(PiCo)
+write.table(t_PiCo, file = "t_PiCo", sep = "\t")
+system("sed -i '1d' t_PiCo")
+
+reload_tPi_Lilli <- read.csv("tPi_Lilli", sep="\t")
+reload_tPi_Clue <- read.csv("tPi_Clue", sep="\t")
+reload_tPi_BputSem <- read.csv("tPi_BputSem", sep="\t")
+reload_tPi_Baz <- read.csv("tPi_Baz", sep="\t")
+reload_PiCo <- read.csv("t_PiCo", sep="\t")
+```
+
+
+```{r permanova all genes}
+
+# DISSIMILARITY MATRIX pi ALL GENES
+
+# Lilli
+# make subset by removing names for calculation of dissimilarity matrix
+ncol(reload_tPi_Lilli) # results in 3353
+subs_reload_tPi_Lilli <- reload_tPi_Lilli[,2:3353]
+
+# calculate dissimilarity matrix with method Bray Curtis
+tPiLi.dist <- as.matrix(vegdist(subs_reload_tPi_Lilli,method="bray"))
+
+
+# CLUE
+# make subset by removing names for calculation of dissimilarity matrix
+ncol(reload_tPi_Clue) # results in 3024
+subs_reload_tPi_Clue <- reload_tPi_Clue[,2:3024]
+
+# calculate dissimilarity matrix with method Bray Curtis
+tPiC.dist <- as.matrix(vegdist(subs_reload_tPi_Clue,method="bray"))
+
+
+# BPUTSEM
+# make subset by removing names for calculation of dissimilarity matrix
+ncol(reload_tPi_BputSem) # results in 2436
+subs_reload_tPi_BputSem <- reload_tPi_BputSem[,2:2436]
+
+# calculate dissimilarity matrix with method Bray Curtis
+tPiBp.dist <- as.matrix(vegdist(subs_reload_tPi_BputSem,method="bray"))
+
+
+# BAZ
+# make subset by removing names for calculation of dissimilarity matrix
+ncol(reload_tPi_Baz) # results in 3321
+subs_reload_tPi_Baz <- reload_tPi_Baz[,2:3321]
+
+# calculate dissimilarity matrix with method Bray Curtis
+tPiBa.dist <- as.matrix(vegdist(subs_reload_tPi_Baz,method="bray"))
+```
+
+
+```{r permanova pi all sites on core}
+
+# DISSIMILARITY MATRIX pi ALL SITES ON CORE
+
+# make subset by removing names for calculation of dissimilarity matrix
+ncol(reload_PiCo) # results in 1186
+reload_PiCo_cat <- reload_PiCo[,2:1186]
+subs_reload_PiCo <- reload_PiCo[,2:1185]
+
+# calculate dissimilarity matrix with method Bray Curtis
+PiCoMAR.dist <- as.matrix(vegdist(subs_reload_PiCo,method="bray"))
+head(PiCoMAR.dist)
+summary(PiCoMAR.dist)
+
+## subsets: pairs
+# Lilli vs Clue core genes
+reload_PiCo_LvC <- reload_PiCo[22:51,2:1186]
+subsLvC_reload_PiCo <- reload_PiCo[22:51,2:1185]
+PiCoLvC.dist <- as.matrix(vegdist(subsLvC_reload_PiCo,method="bray"))
+
+# Clue vs BputSem core genes
+reload_PiCo_BPvC <- reload_PiCo[16:36,2:1186]
+subsBPvC_reload_PiCo <- reload_PiCo[16:36,2:1185]
+PiCoBPvC.dist <- as.matrix(vegdist(subsBPvC_reload_PiCo,method="bray"))
+
+# BputSem vs Baz core genes
+reload_PiCo_BAvBP <- reload_PiCo[1:21,2:1186]
+subsBAvBP_reload_PiCo <- reload_PiCo[1:21,2:1185]
+PiCoBAvBP.dist <- as.matrix(vegdist(subsBAvBP_reload_PiCo,method="bray"))
+
+# Lilli vs BputSem core genes
+reload_PiCo_LvBP <- reload_PiCo[c(16:21,37:51),2:1186]
+subsLvBP_reload_PiCo <- reload_PiCo[c(16:21,37:51),2:1185]
+PiCoLvBP.dist <- as.matrix(vegdist(subsLvBP_reload_PiCo,method="bray"))
+
+# Lilli vs Baz core genes
+reload_PiCo_LvBa <- reload_PiCo[c(1:15,37:51),2:1186]
+subsLvBa_reload_PiCo <- reload_PiCo[c(1:15,37:51),2:1185]
+PiCoLvBa.dist <- as.matrix(vegdist(subsLvBa_reload_PiCo,method="bray"))
+
+# Clue vs Baz core genes
+reload_PiCo_CvBa <- reload_PiCo[c(1:15,22:36),2:1186]
+subsCvBa_reload_PiCo <- reload_PiCo[c(1:15,22:36),2:1185]
+PiCoCvBa.dist <- as.matrix(vegdist(subsCvBa_reload_PiCo,method="bray"))
+
+## SUBSETS PER SITE
+
+# Lilli or core genes
+reload_PiCo_Lilli <- reload_PiCo[37:51,2:1186]
+subsLi_reload_PiCo <- reload_PiCo[37:51,2:1185]
+PiCoLi.dist <- as.matrix(vegdist(subsLi_reload_PiCo,method="bray"))
+
+# Clue or core genes
+reload_PiCo_Clue <- reload_PiCo[22:36,2:1186]
+subsCl_reload_PiCo <- reload_PiCo[22:36,2:1185]
+PiCoCl.dist <- as.matrix(vegdist(subsCl_reload_PiCo,method="bray"))
+
+# BputSem or core genes
+reload_PiCo_BputSem <- reload_PiCo[16:21,2:1186]
+subsBp_reload_PiCo <- reload_PiCo[16:21,2:1185]
+PiCoBp.dist <- as.matrix(vegdist(subsBp_reload_PiCo,method="bray"))
+
+# Baz or core genes
+reload_PiCo_Baz <- reload_PiCo[1:15,2:1186]
+subsBa_reload_PiCo <- reload_PiCo[1:15,2:1185]
+PiCoBa.dist <- as.matrix(vegdist(subsBa_reload_PiCo,method="bray"))
+```
+
+```{r summary stats for core and all genes}
+
+# PERMANOVA results for all sites and subsets for all and core genes
+
+# summary stats on core genes
+# all sites combines (within and between individuals)
+adonis(PiCoMAR.dist ~ site, data=reload_PiCo_cat, method="bray")
+
+# pairwise between 2 sites
+# Lilli vs Clue
+adonis(PiCoLvC.dist ~ site, data=reload_PiCo_LvC, method="bray")
+# Clue vs BputSem
+adonis(PiCoBPvC.dist ~ site, data=reload_PiCo_BPvC, method="bray")
+# BputSem vs Baz
+adonis(PiCoBAvBP.dist ~ site, data=reload_PiCo_BAvBP, method="bray")
+# Lilli vs BputSem
+adonis(PiCoLvBP.dist ~ site, data=reload_PiCo_LvBP, method="bray")
+# Lilli vs Baz
+adonis(PiCoLvBa.dist ~ site, data=reload_PiCo_LvBa, method="bray")
+# Clue vs Baz
+adonis(PiCoCvBa.dist ~ site, data=reload_PiCo_CvBa, method="bray")
+
+# per site within and between individuals core genes
+# Lilli
+adonis(PiCoLi.dist ~ site, data=reload_PiCo_Lilli, method="bray")
+# Clue
+adonis(PiCoCl.dist ~ site, data=reload_PiCo_Clue, method="bray")
+# BputSem
+adonis(PiCoBp.dist ~ site, data=reload_PiCo_BputSem, method="bray")
+# Baz
+adonis(PiCoBa.dist ~ site, data=reload_PiCo_Baz, method="bray")
+
+# per site within and between individuals all genes
+# Lilli
+adonis(tPiLi.dist ~ Name, data=reload_tPi_Lilli, method="bray")
+# Clue
+adonis(tPiC.dist ~ Name, data=reload_tPi_Clue, method="bray")
+# BputSem
+adonis(tPiBp.dist ~ Name, data=reload_tPi_BputSem, method="bray")
+# Baz
+adonis(tPiBa.dist ~ Name, data=reload_tPi_Baz, method="bray")
+```

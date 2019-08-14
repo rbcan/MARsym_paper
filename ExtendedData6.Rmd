@@ -1,0 +1,142 @@
+---
+title: "Plots_for_ExtendedData6"
+author: "Rebecca_Ansorge"
+date: "July 14, 2019"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+### load libraries 
+library(Hmisc)
+library(ggplot2)
+library(data.table)
+library(grid)
+library(gridExtra)
+```
+
+```{r calculate correlations Fst.sizediff}
+
+# correlation of FST with mussel size difference
+
+Fst.size <- read.csv('/PATH/Fst.size.cor.list', sep="\t")
+
+Fst.size.baz <- Fst.size[1:10,1:2]
+Fst.size.bput <- Fst.size[11:13,1:2]
+Fst.size.clue <- Fst.size[14:23,1:2]
+Fst.size.lilli <- Fst.size[24:33,1:2]
+
+# calculates correlation coefficient R and correlation p-value
+corall <- rcorr(as.matrix(Fst.size), type="spearman") 
+corbaz <- rcorr(as.matrix(Fst.size.baz), type="spearman") 
+#corbput <- rcorr(as.matrix(Fst.size.bput), type="spearman") 3 is not enough for stats
+corclue <- rcorr(as.matrix(Fst.size.clue), type="spearman") 
+corlilli <- rcorr(as.matrix(Fst.size.lilli), type="spearman") 
+
+# print r and p values
+corall$r # print corr. coefficient
+corall$P # print corr. p-value
+corbaz$r # print corr. coefficient
+corbaz$P # print corr. p-value
+corclue$r # print corr. coefficient
+corclue$P # print corr. p-value
+corlilli$r # print corr. coefficient
+corlilli$P # print corr. p-value
+
+Fst.plot.size <- read.csv('/PATH/Fst.size.cor.labels.list', sep="\t")
+Fst.size.l.baz <- Fst.plot.size[1:10,1:4]
+Fst.size.l.bput <- Fst.plot.size[11:13,1:4]
+Fst.size.l.clue <- Fst.plot.size[14:23,1:4]
+Fst.size.l.lilli <- Fst.plot.size[24:33,1:4]
+```
+
+```{r calculate correlations SNP.size}
+
+# correlation of SNP with mussel size
+
+SNPs.size.abs <- read.csv('/PATH/snps.size.absol.cor.list', sep="\t")
+
+SNPs.abs.bput <- SNPs.size.abs[2:4,1:2]
+SNPs.abs.clue <- SNPs.size.abs[5:9,1:2]
+SNPs.abs.baz <- SNPs.size.abs[10:14,1:2]
+SNPs.abs.lilli <- SNPs.size.abs[15:20,1:2]
+
+
+# calculates correlation coefficient R and correlation p-value
+corbaz.abs <- rcorr(as.matrix(SNPs.abs.baz), type="spearman") 
+corbput.abs <- rcorr(as.matrix(SNPs.abs.bput), type="spearman")
+corclue.abs <- rcorr(as.matrix(SNPs.abs.clue), type="spearman") 
+corlilli.abs <- rcorr(as.matrix(SNPs.abs.lilli), type="spearman") 
+
+corbaz.abs$r # print corr. coefficient
+corbaz.abs$P # print corr. p-value
+corbput.abs$r # print corr. coefficient
+corbput.abs$P # print corr. p-value
+corclue.abs$r # print corr. coefficient
+corclue.abs$P # print corr. p-value
+corlilli.abs$r # print corr. coefficient
+corlilli.abs$P # print corr. p-value
+
+SNPs.plot.abs <- read.csv('/PATH/snps.size.absol.cor.list', sep="\t")
+```
+
+```{r calculate correlations Fst.sizesum}
+
+# correlation of FST with mussel size sum
+
+Fst.sizesum <- read.csv('/PATH/Fst.sizesum.cor.list', sep="\t") 
+
+Fst.sizesum.baz <- Fst.sizesum[1:10,1:2]
+Fst.sizesum.bput <- Fst.sizesum[11:13,1:2]
+Fst.sizesum.clue <- Fst.sizesum[14:23,1:2]
+Fst.sizesum.lilli <- Fst.sizesum[24:33,1:2]
+
+# calculates correlation coefficient R and correlation p-value
+corallsum <- rcorr(as.matrix(Fst.sizesum), type="spearman") 
+corbazsum <- rcorr(as.matrix(Fst.sizesum.baz), type="spearman") 
+#corbput <- rcorr(as.matrix(Fst.size.bput), type="spearman") 3 is not enough for stats
+corcluesum <- rcorr(as.matrix(Fst.sizesum.clue), type="spearman") 
+corlillisum <- rcorr(as.matrix(Fst.sizesum.lilli), type="spearman") 
+
+# print r and p values
+corallsum$r # print corr. coefficient
+corallsum$P # print corr. p-value
+corbazsum$r # print corr. coefficient
+corbazsum$P # print corr. p-value
+corcluesum$r # print corr. coefficient
+corcluesum$P # print corr. p-value
+corlillisum$r # print corr. coefficient
+corlillisum$P # print corr. p-value
+
+Fst.plot.sizesum <- read.csv('/PATH/Fst.sizesum.cor.labels.list', sep="\t")
+Fst.sizesum.l.baz <- Fst.plot.sizesum[1:10,1:4]
+Fst.sizesum.l.bput <- Fst.plot.sizesum[11:13,1:4]
+Fst.sizesum.l.clue <- Fst.plot.sizesum[14:23,1:4]
+Fst.sizesum.l.lilli <- Fst.plot.sizesum[24:33,1:4]
+```
+
+```{r plotting correlaions}
+
+# combiplot Extended Data 6 - split plot according to site
+Fs.plot <- ggplot(Fst.plot.size, aes(sizediff, Fst)) + geom_point(aes(colour = site)) + geom_smooth(method="lm", aes(colour = site), fullrange=TRUE, se=FALSE, size = 0.5)
+fst.fac <- Fs.plot + facet_grid(. ~ site) 
+
+Fs.sum.plot <- ggplot(Fst.plot.sizesum, aes(sizesum, Fst)) + geom_point(aes(colour = site)) + geom_smooth(method="lm", aes(colour = site), fullrange=TRUE, se=FALSE, size = 0.5)
+fst.sum.fac <- Fs.sum.plot + facet_grid(. ~ site)
+
+snp.plot <- ggplot(SNPs.plot.abs, aes(size, snpskb1)) + geom_point(aes(colour = site)) + geom_smooth(method="lm", aes(colour = site), fullrange=TRUE, se=FALSE, size = 0.5)
+snps.abs.fac <- snp.plot + facet_grid(. ~ site) 
+
+# create text box according to outputs from rcorr
+# split correlation 
+grr <- grobTree(textGrob("r = 0.27, p = 0.45", x=0.1,  y=0.45, hjust=0, gp=gpar(col="black", fontsize=10, fontface="italic")), textGrob("r = 0.30, p = 0.40", x=0.51,  y=0.45, hjust=0, gp=gpar(col="black", fontsize=10, fontface="italic")), textGrob("r = 0.17, p = 0.64", x=0.72,  y=0.45, hjust=0, gp=gpar(col="black", fontsize=10, fontface="italic")))
+grr_sum <- grobTree(textGrob("r = 0.62, p = 0.06", x=0.1,  y=0.45, hjust=0, gp=gpar(col="black", fontsize=10, fontface="italic")), textGrob("r = -0.18, p = 0.62", x=0.51,  y=0.45, hjust=0, gp=gpar(col="black", fontsize=10, fontface="italic")), textGrob("r = 0.51, p = 0.13", x=0.72,  y=0.45, hjust=0, gp=gpar(col="black", fontsize=10, fontface="italic")))
+
+grob <- grobTree(textGrob("r = 0.61, p = 0.06", x=0.1,  y=0.30, hjust=0, gp=gpar(col="black", fontsize=10, fontface="italic")), textGrob("r = 0.25, p = 0.48", x=0.51,  y=0.30, hjust=0, gp=gpar(col="black", fontsize=10, fontface="italic")), textGrob("r = 0.49, p = 0.18", x=0.72,  y=0.30, hjust=0, gp=gpar(col="black", fontsize=10, fontface="italic"))) # numbers when average shell sizes plotted
+
+grib <- grobTree(textGrob("r = -0.5, p = 0.4", x=0.1,  y=0.30, hjust=0, gp=gpar(col="black", fontsize=10, fontface="italic")), textGrob("r = 0.9, p = 0.04", x=0.51,  y=0.30, hjust=0, gp=gpar(col="black", fontsize=10, fontface="italic")), textGrob("r = -0.8, p = 0.2", x=0.72,  y=0.30, hjust=0, gp=gpar(col="black", fontsize=10, fontface="italic"))) # snps and shell length corr.
+
+# place plots into one
+grid.arrange(grr, fst.fac, grr_sum, fst.sum.fac, grib, snps.abs.fac, ncol = 1, nrow = 6, widths=c(6), heights=c(0.5, 6, 1, 6, 1, 6))
+```

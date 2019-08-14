@@ -1,0 +1,59 @@
+---
+title: "Plots_for_Figure5"
+author: "Rebecca_Ansorge"
+date: "July 14, 2019"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r load libs}
+### load libraries 
+library(ggplot2)
+library(data.table)
+library(ggfortify)
+```
+
+```{r Pi corePCA}
+# Fig. 2a PCA plot
+
+# all sites within and between individual pi
+PiCo <- read.csv("/PATH/Pi.Core_all.id95.100x.list", sep="\t")
+t_PiCo <- t(PiCo)
+write.table(t_PiCo, file = "t_PiCo", sep = "\t")
+system("sed -i '1d' t_PiCo")
+reload_PiCo <- read.csv("t_PiCo", sep="\t")
+
+# consider only column 2-1184
+reload_PiCo.col <- reload_PiCo[,2:1185]
+
+# transform to PCA
+PiCo.pca <- prcomp(reload_PiCo.col, center = TRUE)
+
+# plot the PCA, color by site
+x<-autoplot(PiCo.pca, data = reload_PiCo, colour = 'site', size = 2.5)
+
+# show plot
+x
+
+# get summary of PCA
+summary(PiCo.pca)
+
+```
+
+```{r}
+# FST Fig. 2b
+
+mFstpoints<- read.csv('/PATH/mFst.list', sep="\t")
+mFstpointsBaz2<- read.csv('/PATH/mFstBaz_diffSpots.list', sep="\t")
+avmFst_line<- read.csv('/PATH/mFst_avline.list', sep="\t")
+
+mFstplot <-ggplot(mFstpoints, aes(ind, mFst)) +
+        geom_point(aes(colour = site), size = 2) + 
+        ylim(0,0.3) +
+        theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank()) +
+        geom_point(data=mFstpointsBaz2, aes(colour = site), shape=5, size = 2) + 
+        geom_line(data=avmFst_line, aes(colour = site), size=0.3)
+mFstplot
+
+```

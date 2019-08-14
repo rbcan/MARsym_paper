@@ -1,0 +1,37 @@
+---
+title: "Plots_for_Figure4"
+author: "Rebecca_Ansorge"
+date: "July 14, 2019"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+library(ggplot2)
+library(data.table)
+```
+
+```{r pacbio}
+# Figure 4
+
+# Turtle Pits (B. sp.)
+strainsTp <- fread('/PATH/strains.rarfact.turtpits.id95.csv', sep="\t")
+strTp <- melt(strainsTp, id.vars="number", 
+              measure.vars = grep("^5deg", names(strainsTp), value = TRUE))
+
+pacbioTp <- fread('/PATH/PacBio.contig.numbers.cdf.csv', sep="\t")
+pbTp <- melt(pacbioTp, id.vars="number", 
+              measure.vars = grep("^5deg", names(pacbioTp), value = TRUE))
+
+strTp[ , seq := 'strains']
+pbTp[ , seq := 'pacbio']
+
+pbAll <- rbind(strTp, pbTp, fill = TRUE)
+pb <- ggplot(pbAll, aes(number, value)) 
+
+pb + geom_point(shape=1, size = 1) + geom_line(aes(group = seq, linetype = seq), size = 0.2) + scale_y_continuous(limits = c(0,100), breaks=seq(0, 100, 10)) + scale_x_continuous(limits = c(0.8,12), breaks=seq(0, 12, 2))
+
+```
+
+
