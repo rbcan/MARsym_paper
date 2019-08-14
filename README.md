@@ -99,6 +99,11 @@ Shows detailed commands that were used for identification of genes with coverage
 - LowCovGenes_noHypo_$sample - *list with low-coverage genes, excluding hypothetical proteins*
 - $ref.plots.pdf - * plots with coverage distribution of genes*
 
+# 03. Produce figures and analyses from source data: all *.Rmd* scripts
+
+With the manuscript we submitted excel files of source data for Figures 2, 3, 4; Extended Data 5, 6, 7; and the PERMANOVA analysis of pi values. Every excel sheet needs to be extracted into a separate file and the term "PATH" in the *.Rmd* scripts needs to be replaced with the location of files. (for accessing the excel files please wait for publication of the manuscript)
+
+
 --
 
 If you find these workflows useful and use some of them in your study, please cite the following manuscript and the studies that developed the bioinformatic tools within the workflow:
